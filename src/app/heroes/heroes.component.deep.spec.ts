@@ -34,7 +34,7 @@ describe('HereosComponent Deep Test', () => {
         fixture = TestBed.createComponent(HeroesComponent);
     });
 
-    it('should retender each hero as a heroCOmponent ', () => {
+    it('should retender each hero as a heroComponent ', () => {
         mockHeroService.getHeroes.and.returnValue(of(HEREOS));
 
         fixture.detectChanges();
@@ -42,5 +42,20 @@ describe('HereosComponent Deep Test', () => {
         const heroComponentDEs = fixture.debugElement.queryAll(By.directive(HeroComponent));
         expect(heroComponentDEs.length).toEqual(4);
         expect(heroComponentDEs[0].componentInstance.hero.name).toEqual('Sam');
+    })
+
+    it(` should call heroService deleteHero when the Hero Component's
+        delete button is clicked`, () => {
+
+            spyOn(fixture.componentInstance, 'delete');
+            mockHeroService.getHeroes.and.returnValue(of(HEREOS));
+
+            fixture.detectChanges();
+
+            const heroComponents = fixture.debugElement.queryAll(By.directive(HeroComponent));
+            heroComponents[0].query(By.css('button'))
+                .triggerEventHandler('click', { stopPropagation: () => {}});
+            
+            expect(fixture.componentInstance.delete).toHaveBeenCalledWith(HEREOS[0])
     })
 })
